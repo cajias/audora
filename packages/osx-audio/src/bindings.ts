@@ -1,60 +1,70 @@
-/**
- * Load the compiled dynamic library. Adjust the path as needed.
- * If you're in this same directory after building, it might be `./build/libaudiocap.dylib`.
- */
-const LIB_PATH = new URL("../build/libaudiocap.dylib", import.meta.url).pathname;
+type SwiftSymbols = {
+  registerOnDataCallback: Deno.ForeignFunction<["function", "pointer"], "i32">;
+  startAudioCapture: Deno.ForeignFunction<["pointer"], "i32">;
+  stopAudioCapture: Deno.ForeignFunction<[], "void">;
+};
 
-export const dylib = Deno.dlopen(LIB_PATH, {
-  startAudioCapture: {
-    parameters: ["pointer"], // Correct parameter type
-    result: "i32",           // Correct result type
-  },
-  readAudioFrame: {
-    parameters: ["pointer", "i32"], // Correct parameter types
-    result: "i32",                  // Correct result type
-  },
-  stopAudioCapture: {
-    parameters: [],
-    result: "void",                 // Correct result type
-  },
-} as const);
-/**
- * Start capturing audio from a macOS application identified by `bundleId`.
- *
- * @param bundleId e.g. "com.apple.Music"
- * @returns 0 on success, -1 on failure
- */
-export async function startCapture(bundleId: string): Promise<number> {
-  const encoder = new TextEncoder();
-  const cString = encoder.encode(bundleId + "\0"); // Null-terminate
-  const ptr = Deno.UnsafePointer.of(cString);
+// Dynamically resolve library path
+const LIB_PATH = new URL("../build/universal/libaudiocap.dylib", import.meta.url).pathname;
 
-  if (!ptr) {
-    return -1;
-  }
+// Deno FFI: Open the library
+const { symbols } = Deno.dlopen<SwiftSymbols>(LIB_PATH, {
+  registerOnDataCallback: { parameters: ["function", "pointer"], result: "i32" },
+  startAudioCapture: { parameters: ["pointer"], result: "i32" },
+  stopAudioCapture: { parameters: [], result: "void" },
+});
 
-  return dylib.symbols.startAudioCapture(ptr);
+/** Register a callback to receive audio data */
+export function registerOnDataCallback(onData: (chunk: Uint8Array) => void): number | Promise<number> {
+  const rawCallback = new Deno.UnsafeCallback(
+      {
+        parameters: ["pointer", "pointer", "i32"],
+        result: "void",
+      },
+      (_userContext: Deno.PointerValue, dataPtr: Deno.PointerValue, length: number) => {
+        if (!dataPtr || length <= 0) {
+          console.log(`Invalid data pointer or length: ${dataPtr} ${length}`);
+          return;
+        }
+        const chunk = new Uint8Array(Deno.UnsafePointerView.getArrayBuffer(dataPtr, length));
+        console.log("Received audio chunk of size:", chunk.length);
+        onData(chunk);
+      }
+  );
+
+  const result = symbols.registerOnDataCallback(rawCallback.pointer, null);
+  rawCallback.close(); // Cleanup after use
+  return result;
 }
 
-/**
- * Read PCM data into the provided `buffer`.
- *
- * @param buffer A Uint8Array to store the PCM data.
- * @returns The number of bytes actually read.
- */
-export async function readFrame(buffer: Uint8Array): Promise<number> {
-  const ptr = Deno.UnsafePointer.of(buffer);
-
-  if (!ptr) {
-    return -1
+/** Start audio capture for the given bundle ID */
+export function startAudioCapture(bundleID: string): number {
+  if (!bundleID) {
+    throw new Error("Bundle ID cannot be empty.");
   }
 
-  return dylib.symbols.readAudioFrame(ptr, buffer.length);
+  // Encode the bundle ID as a null-terminated C string
+  const bytes = new TextEncoder().encode(bundleID + "\0");
+
+  // Allocate memory for the string
+  const memory = new Uint8Array(bytes.length);
+  memory.set(bytes);
+
+  // Get a pointer to the allocated memory
+  const ptr = Deno.UnsafePointer.of(memory);
+
+  if (!ptr) {
+    throw new Error("Failed to get a pointer to the bundle ID.");
+  }
+
+  // Call the FFI function
+  const result = symbols.startAudioCapture(ptr);
+  console.log("startAudioCapture result:", result)
+
+  return result as number;
 }
 
-/**
- * Stop the ongoing audio capture.
- */
-export async function stopCapture(): Promise<void> {
-  dylib.symbols.stopAudioCapture();
+/** Stop audio capture */
+export function stopAudioCapture(): void | Promise<void> {
+  return symbols.stopAudioCapture();
 }

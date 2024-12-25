@@ -1,73 +1,58 @@
 //
 //  AudioCaptureActor.swift
-//  An actor that owns the ring buffer, SCStream, and delegate.
-//  All reads/writes to the ring buffer go through actor methods.
+//  -----------------------------------------------------------------------------
+//  The actor that handles starting/stopping ScreenCaptureKit capture.
+//  When data arrives, we forward it to AudioEventEmitter for distribution.
 //
 import Foundation
-import ScreenCaptureKit
+@preconcurrency import ScreenCaptureKit
 import CoreMedia
 
 actor AudioCaptureActor {
-    // Internal state
-    private let ringBuffer = AudioRingBuffer(capacity: 2_097_152) // ~2MB
     private var scStream: SCStream?
     private let delegate = AudioCaptureDelegate()
 
-    // The delegate sends raw PCM data back to us via a closure.
-    // We capture self weakly to avoid strong reference cycles.
     init() {
-        delegate.onAudioData = { [weak self] pcmData in
-            // We must hop into the actor context to write safely.
-            Task {
-                guard let self = self else { return }
-                await self.writeToRingBuffer(pcmData)
-            }
-        }
+        delegate.audioActor = self
     }
 
-    // MARK: - Actor Methods
+    // Start capture for a given bundle ID
+    func startCapture(for bundleID: String) async throws{
+         do {
+             let scContent = try await SCShareableContent.current
+             print("AudioCaptureActor: Shareable content retrieved: \(scContent)")
 
-    func startCapture(for bundleID: String) {
-        SCShareableContent.getWithCompletionHandler { shareableContent, error in
-            if let error = error {
-                print("AudioCaptureActor: Failed to retrieve shareable content - \(error.localizedDescription)")
-                return
-            }
-            guard let scContent = shareableContent else {
-                print("AudioCaptureActor: No shareable content returned.")
-                return
-            }
+             guard let app = scContent.applications.first(where: { $0.bundleIdentifier == bundleID }) else {
+                 throw NSError(domain: "AudioCaptureActor", code: 1, userInfo: [NSLocalizedDescriptionKey: "App not found"])
+             }
+             print("AudioCaptureActor: App: \(app)")
 
-            // Find the matching application
-            guard let app = scContent.applications.first(where: { $0.bundleIdentifier == bundleID }) else {
-                print("AudioCaptureActor: Application not found: \(bundleID)")
-                return
-            }
+             guard let display = scContent.displays.first else {
+                 throw NSError(domain: "AudioCaptureActor", code: 2, userInfo: [NSLocalizedDescriptionKey: "No displays found"])
+             }
+             print("AudioCaptureActor: display: \(display)")
 
-            // Capture the main display
-            guard let display = scContent.displays.first else {
-                print("AudioCaptureActor: No displays found.")
-                return
-            }
+             let config = SCStreamConfiguration()
+             config.capturesAudio = true
+             if #available(macOS 15.0, *) {
+                 config.captureMicrophone = true
+             }
 
-            let config = SCStreamConfiguration()
-            config.capturesAudio = true
-            config.captureMicrophone = true
+             let filter = SCContentFilter(display: display, including: [app], exceptingWindows: [])
+             let stream = SCStream(filter: filter, configuration: config, delegate: delegate)
+             print("AudioCaptureActor: Stream created: \(stream)")
+             print("AudioCaptureActor: delegate \(delegate)")
+             try await stream.startCapture()
 
-            let filter = SCContentFilter(display: display,
-                                         including: [app],
-                                         exceptingWindows: [])
-            let stream = SCStream(filter: filter,
-                                  configuration: config,
-                                  delegate: self.delegate)
+             self.scStream = stream
+             print("AudioCaptureActor: Capture started for \(bundleID)")
+         } catch {
+             print("AudioCaptureActor: Error starting capture - \(error.localizedDescription)")
+             throw error
+         }
+     }
 
-            // startCapture() isn't throwing in newer ScreenCaptureKit
-            stream.startCapture()
-            self.scStream = stream
-            print("AudioCaptureActor: Capture started for \(bundleID)")
-        }
-    }
-
+    // Stop capture if any
     func stopCapture() {
         guard let stream = scStream else {
             print("AudioCaptureActor: No active stream to stop.")
@@ -76,64 +61,17 @@ actor AudioCaptureActor {
         stream.stopCapture { error in
             if let err = error {
                 print("AudioCaptureActor: Error stopping capture - \(err.localizedDescription)")
-            } else {
-                self.scStream = nil
-                print("AudioCaptureActor: Capture stopped.")
+                return
             }
+            self.scStream = nil
+            print("AudioCaptureActor: Capture stopped.")
         }
     }
 
-    /// Write PCM data into the ring buffer, inside the actor context.
-    func writeToRingBuffer(_ data: Data) {
-        data.withUnsafeBytes { ptr in
-            if let base = ptr.baseAddress?.assumingMemoryBound(to: UInt8.self) {
-                ringBuffer.write(base, length: data.count)
-            }
-        }
-    }
-
-    /// Reads from the ring buffer in a synchronous manner.
-    /// Used by bridging for readAudioFrame.
-    func readAudioFrame(bufferPtr: UnsafeMutableRawPointer?, size: Int) -> Int {
-        // The ring buffer expects an UnsafePointer<UInt8>
-        let dest = bufferPtr?.bindMemory(to: UInt8.self, capacity: size)
-        return ringBuffer.read(dest, maxLength: size)
-    }
-
-    // MARK: - Nested Delegate
-
-    /// A private class that receives audio sample buffers from SCStream.
-    /// We push the raw PCM data back to the actor with onAudioData callback.
-    private final class AudioCaptureDelegate: NSObject, SCStreamDelegate {
-        var onAudioData: ((Data) -> Void)?
-
-        func stream(_ stream: SCStream,
-                    didOutput sampleBuffer: CMSampleBuffer,
-                    of type: SCStreamOutputType)
-        {
-            guard type == .audio else { return }
-            guard let data = extractPCMData(from: sampleBuffer) else { return }
-            onAudioData?(data)
-        }
-
-        private func extractPCMData(from sampleBuffer: CMSampleBuffer) -> Data? {
-            guard let blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer) else {
-                return nil
-            }
-            var lengthAtOffset = 0
-            var totalLength = 0
-            var dataPointer: UnsafeMutablePointer<Int8>?
-
-            let status = CMBlockBufferGetDataPointer(blockBuffer,
-                                                     0,
-                                                     &lengthAtOffset,
-                                                     &totalLength,
-                                                     &dataPointer)
-            guard status == kCMBlockBufferNoErr, let dataPointer = dataPointer else {
-                return nil
-            }
-
-            return Data(bytes: dataPointer, count: totalLength)
-        }
+    // Called by delegate with new PCM data
+    func handlePCMData(_ data: Data) async {
+        print("AudioCaptureActor: Received PCM data of size \(data.count)")
+        // Forward to the event emitter for broadcasting
+        await AudioEventEmitter.shared.emitData(data)
     }
 }
