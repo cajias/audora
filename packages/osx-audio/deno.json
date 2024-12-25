@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "build": "make",
+    "test": "deno test -A",
+    "example": "deno run --allow-ffi --allow-read --allow-write examples/capture_example.ts"
+  }
+}
