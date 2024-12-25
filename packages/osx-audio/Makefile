@@ -16,7 +16,7 @@
 LIB_NAME      := audiocap
 
 # Swift source files. Update as needed (e.g. bridging.swift, AudioCapture.swift, etc.).
-SWIFT_SOURCES := src/native/bridging.swift
+SWIFT_SOURCES := $(wildcard src/**/*.swift)
 
 # Directory to hold intermediate and final build artifacts.
 BUILD_DIR     := build
