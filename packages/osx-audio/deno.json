@@ -3,5 +3,8 @@
     "build": "make",
     "test": "deno test -A",
     "example": "deno run --allow-ffi --allow-read --allow-write examples/capture_example.ts"
+  },
+  "imports": {
+    "@std/path": "jsr:@std/path@^1.0.8"
   }
 }

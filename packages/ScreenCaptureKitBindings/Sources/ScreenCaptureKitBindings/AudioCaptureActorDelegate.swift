@@ -7,16 +7,27 @@
 import Foundation
 import ScreenCaptureKit
 import CoreMedia
+import OSLog
 
-final class AudioCaptureDelegate: NSObject, SCStreamDelegate {
+final class AudioCaptureDelegate: NSObject, SCStreamDelegate, SCStreamOutput {
+    private let logger = Logger(subsystem: "io.cajias.audora", category: "AudioCaptureDelegate")
+
     // A weak reference to the actor so we don’t create a retain cycle
     weak var audioActor: AudioCaptureActor?
 
     func stream(_ stream: SCStream, didOutput sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) async {
-        print("AudioCaptureDelegate didOutput \(sampleBuffer)")
-        guard type == .audio else { return }
-        guard let data = extractPCMData(from: sampleBuffer) else { return }
-        await audioActor?.handlePCMData(data)
+        print("AudioCaptureDelegate didOutput \(String(describing: sampleBuffer))")
+            switch type {
+            case .screen:
+                print("Not handling screen output")
+            case .audio:
+                guard let data = extractPCMData(from: sampleBuffer) else { return }
+                await audioActor?.handlePCMData(data)
+            case .microphone:
+                print("Not handling microphone output")
+            @unknown default:
+                print("Not handling \(type) output")
+            }
     }
 
     func streamDidBecomeActive(_ stream: SCStream){
@@ -24,7 +35,7 @@ final class AudioCaptureDelegate: NSObject, SCStreamDelegate {
     }
 
     private func extractPCMData(from sampleBuffer: CMSampleBuffer) -> Data? {
-        print("AudioCaptureDelegate extractPCMData \(sampleBuffer)")
+        print("AudioCaptureDelegate extractPCMData \(String(describing: sampleBuffer))")
         guard let blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer) else {
             return nil
         }

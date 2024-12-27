@@ -1,11 +1,11 @@
 import {
-    registerOnDataCallback,
+    onData,
     startAudioCapture,
     stopAudioCapture,
 } from "./bindings.ts";
 
 // Register the callback to process audio data
-registerOnDataCallback((chunk) => {
+onData((chunk) => {
     console.log("Received audio chunk of size:", chunk.length);
     // You can add further processing here, such as saving or analyzing the chunk.
 });
