@@ -5,7 +5,7 @@
 import { AudioCapture } from "./audio_capture.ts";
 import { OutputWriter } from "./output_writer.ts";
 import { AudioMonitorConfig, MonitorEvent, MonitorStatus, TranscriptionResult } from "./types.ts";
-import { WhisperTranscriber } from "@audora/whisper-transcriber";
+import { WhisperTranscriber } from "../../whisper-transcriber/mod.ts";
 
 /**
  * Audio Monitor class that coordinates audio capture and transcription
