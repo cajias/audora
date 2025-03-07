@@ -31,27 +31,16 @@ git clone https://github.com/yourusername/audora.git
 cd audora
 ```
 
-You can also install the CLI globally:
-
-```bash
-deno task install
-```
-
-This will install the `audora` command globally.
-
 ## Usage
 
 ### Command Line
 
 ```bash
-# Using the task
+# Using the task (easiest)
 deno task start "Zoom"
 
 # Using the CLI directly
 ./cli.ts "Zoom"
-
-# If installed globally
-audora "Zoom"
 ```
 
 Replace `"Zoom"` with the name of the application you want to monitor.
