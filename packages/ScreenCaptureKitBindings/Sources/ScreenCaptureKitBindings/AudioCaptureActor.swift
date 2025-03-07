@@ -18,24 +18,22 @@ actor AudioCaptureActor {
     private let videoSampleBufferQueue = DispatchQueue(label: "io.cajias.audora.VideoSampleBufferQueue")
     private let audioSampleBufferQueue = DispatchQueue(label: "io.cajias.audora.AudioSampleBufferQueue")
     private let micSampleBufferQueue = DispatchQueue(label: "io.cajias.audora.MicSampleBufferQueue")
-    var subscriptions: [UUID: AnyCancellable] = [:]
-
-    /// A Combine subject for emitting audio data.
-    private let audioDataSubject = PassthroughSubject<Data, Never>()
+    
+    // Dictionary to store callback functions by ID
+    private var callbacks: [UUID: @Sendable (Data) -> Void] = [:]
     
     init() {
         delegate.audioActor = self
     }
 
-        
-    func onData(_ subscriptionID: UUID,_ callback: @escaping ((Data) -> Void)) -> Void {
-        let cancellable = audioDataSubject.sink(receiveValue: callback)
-        subscriptions[subscriptionID]  = cancellable
+    func onData(_ subscriptionID: UUID, _ callback: @Sendable @escaping (Data) -> Void) {
+        callbacks[subscriptionID] = callback
+        print("AudioCaptureActor: Registered callback with ID \(subscriptionID), total callbacks: \(callbacks.count)")
     }
     
-    func unsubscribeFromAudioData(_ subscriptionID: UUID) -> Void {
-        subscriptions[subscriptionID]?.cancel()
-        subscriptions[subscriptionID] = nil
+    func unsubscribeFromAudioData(_ subscriptionID: UUID) {
+        callbacks.removeValue(forKey: subscriptionID)
+        print("AudioCaptureActor: Removed callback with ID \(subscriptionID), remaining callbacks: \(callbacks.count)")
     }
     
     // MARK: - Capture Lifecycle
@@ -59,19 +57,19 @@ actor AudioCaptureActor {
                 ])
             }
             print("AudioCaptureActor: Display: \(display)")
-
+            
             let config = SCStreamConfiguration()
+            
+            // Audio configuration
             config.capturesAudio = true
-            if #available(macOS 15.0, *) {
-                config.captureMicrophone = true
-                config.microphoneCaptureDeviceID = AVCaptureDevice.default(for: .audio)?.uniqueID
-            }
-
+            config.excludesCurrentProcessAudio = false
+            
+            // Use app filter for now as it's more reliable
             let filter = SCContentFilter(display: display, including: [app], exceptingWindows: [])
             print("Filter style: \(filter.style)")
+            
             let stream = SCStream(filter: filter, configuration: config, delegate: delegate)
             try stream.addStreamOutput(delegate, type: .audio, sampleHandlerQueue: audioSampleBufferQueue)
-            try stream.addStreamOutput(delegate, type: .microphone, sampleHandlerQueue: micSampleBufferQueue)
             try stream.addStreamOutput(delegate, type: .screen, sampleHandlerQueue: videoSampleBufferQueue)
             print("AudioCaptureActor: Stream created: \(stream)")
 
@@ -103,9 +101,15 @@ actor AudioCaptureActor {
     // MARK: - Handling PCM Data
 
     /// Called by delegate with new PCM data.
-    /// Publishes data to `audioDataSubject` for all subscribers.
+    /// Calls all registered callbacks with the data
     func handlePCMData(_ data: Data) async {
         logger.info("AudioCaptureActor: Received PCM data of size \(data.count)")
-        audioDataSubject.send(data)
+        print("AudioCaptureActor: Sending PCM data of size \(data.count) to \(callbacks.count) callbacks")
+        
+        // Call each registered callback with the data
+        for (id, callback) in callbacks {
+            print("AudioCaptureActor: Calling callback \(id) with data")
+            callback(data)
+        }
     }
 }

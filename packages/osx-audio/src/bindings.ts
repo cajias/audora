@@ -17,9 +17,18 @@ const { symbols } = Deno.dlopen<SwiftSymbols>(LIB_PATH, {
   stopCapture: { parameters: [], result: "void" },
 });
 
+// Global callback reference to prevent garbage collection
+let globalCallback: Deno.UnsafeCallback | null = null;
+
 /** Register a callback to receive audio data */
 export function onData(callback: (chunk: Uint8Array) => void): number | Promise<number> {
-  const rawCallback = new Deno.UnsafeCallback(
+  // Clean up any existing callback
+  if (globalCallback) {
+    globalCallback.close();
+  }
+
+  // Create a new callback and store it globally
+  globalCallback = new Deno.UnsafeCallback(
       {
         parameters: ["pointer", "i32"],
         result: "void",
@@ -35,8 +44,7 @@ export function onData(callback: (chunk: Uint8Array) => void): number | Promise<
       }
   );
 
-  const result = symbols.onData(rawCallback.pointer);
-  rawCallback.close(); // Cleanup after use
+  const result = symbols.onData(globalCallback.pointer);
   return result;
 }
 

@@ -1,43 +1,32 @@
-import {
-    onData,
-    startAudioCapture,
-    stopAudioCapture,
-} from "./bindings.ts";
+import { onData, startAudioCapture, stopAudioCapture } from "./bindings.ts";
 
-console.log("Registering callback for audio data...");
+// Simple test script to debug audio capture
+console.log("Starting audio capture test");
 
-// Register the callback to process audio data
-onData((chunk) => {
-    console.log("Received audio chunk of size:", chunk.length);
-    // You can add further processing here, such as saving or analyzing the chunk.
+// Subscribe to audio data
+let dataReceived = false;
+let dataCount = 0;
+onData((data) => {
+  dataCount++;
+  console.log(`Received audio data of size: ${data.byteLength}, total chunks: ${dataCount}`);
+  
+  // Print first few bytes for debugging
+  if (data.byteLength > 0) {
+    const firstBytes = new Uint8Array(data.slice(0, Math.min(16, data.byteLength)));
+    console.log(`First bytes: [${Array.from(firstBytes).join(', ')}]`);
+    dataReceived = true;
+  }
 });
 
-// Start capturing from a specific app (e.g., TextEdit for testing)
-// const bundleID = "com.amazon.Amazon-Chime"; // Replace with your app's bundle ID
-const bundleID = "com.apple.Music"; // Replace with your app's bundle ID
-console.log("Starting audio capture for:", bundleID);
-const result = startAudioCapture(bundleID);
+// Start capturing audio from QuickTime Player
+console.log("Starting audio capture for QuickTime Player");
+const result = startAudioCapture("com.apple.QuickTimePlayerX");
+console.log(`startCapture result: ${result}`);
 
-if (result !== 0) {
-    console.error("Failed to start audio capture. Error code:", result);
-    Deno.exit(1);
-}
-
-// Run for 30 seconds, then stop
-console.log("Audio capture started. Listening for 30 seconds...");
+// Wait for 10 seconds or until data is received
+console.log("Waiting for audio data (10 second timeout)...");
 setTimeout(() => {
-    stopAudioCapture();
-    console.log("Audio capture stopped.");
-}, 30000);
-
-if (result !== 0) {
-    console.error("Failed to start audio capture. Error code:", result);
-    Deno.exit(1);
-}
-
-// Run for 10 seconds, then stop
-console.log("Audio capture started. Listening for 10 seconds...");
-setTimeout(() => {
-    stopAudioCapture();
-    console.log("Audio capture stopped.");
+  console.log(`Data received during test: ${dataReceived}, total chunks: ${dataCount}`);
+  stopAudioCapture();
+  console.log("Audio capture stopped");
 }, 10000);
