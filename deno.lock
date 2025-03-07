@@ -1,30 +1,23 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@std/assert@1": "1.0.10",
     "jsr:@std/async@1": "1.0.11",
+    "jsr:@std/fmt@~0.218.2": "0.218.2",
     "jsr:@std/fs@1": "1.0.14",
-    "jsr:@std/internal@^1.0.5": "1.0.5",
     "jsr:@std/path@^1.0.8": "1.0.8"
   },
   "jsr": {
-    "@std/assert@1.0.10": {
-      "integrity": "59b5cbac5bd55459a19045d95cc7c2ff787b4f8527c0dd195078ff6f9481fbb3",
-      "dependencies": [
-        "jsr:@std/internal"
-      ]
-    },
     "@std/async@1.0.11": {
       "integrity": "eee0d3405275506638a9c8efaa849cf0d35873120c69b7caa1309c9a9e5b6f85"
+    },
+    "@std/fmt@0.218.2": {
+      "integrity": "99526449d2505aa758b6cbef81e7dd471d8b28ec0dcb1491d122b284c548788a"
     },
     "@std/fs@1.0.14": {
       "integrity": "1e84bf0b95fe08f41f1f4aea9717bbf29f45408a56ce073b0114474ce1c9fccf",
       "dependencies": [
         "jsr:@std/path"
       ]
-    },
-    "@std/internal@1.0.5": {
-      "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
     },
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
@@ -66,21 +59,10 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/assert@1"
-    ],
-    "members": {
-      "packages/osx-audio": {
-        "dependencies": [
-          "jsr:@std/path@^1.0.8"
-        ]
-      },
-      "packages/whisper-transcriber": {
-        "dependencies": [
-          "jsr:@std/async@1",
-          "jsr:@std/fs@1",
-          "jsr:@std/path@^1.0.8"
-        ]
-      }
-    }
+      "jsr:@std/async@1",
+      "jsr:@std/fmt@~0.218.2",
+      "jsr:@std/fs@1",
+      "jsr:@std/path@^1.0.8"
+    ]
   }
 }

@@ -248,7 +248,8 @@ export class AudioCapture {
     const bytesPerSample = this.config.bitsPerSample! / 8;
     const bytesPerFrame = bytesPerSample * this.config.channels!;
     const framesPerBuffer = this.config.sampleRate! * this.config.bufferSize!;
-    const bufferSize = bytesPerFrame * framesPerBuffer;
+    // Increase buffer size by 50% to ensure we have enough space
+    const bufferSize = Math.ceil(bytesPerFrame * framesPerBuffer * 1.5);
     
     // Read audio data in chunks
     const buffer = new Uint8Array(bufferSize);
@@ -263,21 +264,39 @@ export class AudioCapture {
         if (done) break;
         
         if (value) {
+          // Check if we have enough space in the buffer
+          if (offset + value.length > buffer.length) {
+            // Create a larger buffer if needed
+            const newBuffer = new Uint8Array(buffer.length * 2);
+            newBuffer.set(buffer);
+            console.log(`Increasing buffer size from ${buffer.length} to ${newBuffer.length} bytes`);
+            buffer = newBuffer;
+          }
+          
           // Add chunk to buffer
           buffer.set(value, offset);
           offset += value.length;
           
-          // If buffer is full, add it to queue
-          if (offset >= bufferSize) {
+          // If buffer has enough data, add it to queue
+          const targetSize = bytesPerFrame * framesPerBuffer;
+          if (offset >= targetSize) {
             this.audioBuffer.push({
-              data: buffer.slice(0, bufferSize),
+              data: buffer.slice(0, targetSize),
               source: this.getAudioSource(),
               timestamp: Date.now(),
               duration: this.config.bufferSize!
             });
             
-            // Reset buffer
-            offset = 0;
+            // Reset buffer (keep any extra data for next chunk)
+            if (offset > targetSize) {
+              // Move remaining data to beginning of buffer
+              const remaining = buffer.slice(targetSize, offset);
+              buffer.fill(0);
+              buffer.set(remaining, 0);
+              offset = remaining.length;
+            } else {
+              offset = 0;
+            }
           }
         }
       }
