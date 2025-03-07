@@ -1,0 +1,19 @@
+{
+  "name": "@audora/whisper-transcriber",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "imports": {
+    "@std/path": "jsr:@std/path@^1.0.8",
+    "@std/fs": "jsr:@std/fs@^1.0.0",
+    "@std/async": "jsr:@std/async@^1.0.0"
+  },
+  "tasks": {
+    "test": "deno test --allow-read --allow-write --allow-run --allow-env --allow-ffi --unstable-ffi",
+    "test:unit": "deno test --allow-read --allow-write --allow-env tests/audio_utils_test.ts tests/output_parser_test.ts tests/transcriber_test.ts tests/whisper_cpp_test.ts",
+    "test:integration": "deno test --allow-read --allow-write --allow-run --allow-env --allow-ffi --unstable-ffi tests/integration_test.ts",
+    "coverage": "deno test --coverage=coverage --allow-read --allow-write --allow-env tests/audio_utils_test.ts tests/output_parser_test.ts tests/transcriber_test.ts tests/whisper_cpp_test.ts",
+    "coverage:report": "deno coverage coverage --lcov --output=coverage/lcov.info",
+    "coverage:html": "deno coverage coverage --html --output=coverage/html",
+    "coverage:badge": "deno run --allow-read --allow-write scripts/coverage_badge.ts"
+  }
+}

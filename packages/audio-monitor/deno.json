@@ -1,0 +1,20 @@
+{
+  "name": "@audora/audio-monitor",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "imports": {
+    "@std/path": "jsr:@std/path@^1.0.8",
+    "@std/fs": "jsr:@std/fs@^1.0.0",
+    "@std/async": "jsr:@std/async@^1.0.0",
+    "@std/fmt": "jsr:@std/fmt@^0.218.2",
+    "@audora/whisper-transcriber": "../whisper-transcriber/mod.ts"
+  },
+  "tasks": {
+    "start": "deno run --allow-read --allow-write --allow-run --allow-env --allow-ffi --unstable-ffi src/main.ts",
+    "test": "deno test --allow-read --allow-write --allow-run --allow-env --allow-ffi --unstable-ffi",
+    "test:unit": "deno test --allow-read --allow-write --allow-env tests/audio_capture_test.ts tests/monitor_test.ts tests/output_writer_test.ts",
+    "coverage": "deno test --coverage=coverage --allow-read --allow-write --allow-env tests/audio_capture_test.ts tests/monitor_test.ts tests/output_writer_test.ts",
+    "coverage:report": "deno coverage coverage --lcov --output=coverage/lcov.info",
+    "coverage:html": "deno coverage --html coverage"
+  }
+}

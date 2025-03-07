@@ -1,0 +1,29 @@
+{
+  "": {
+    "swift-dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/master.swiftdeps"
+  },
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/AudioCaptureActor.swift": {
+    "dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/AudioCaptureActor.d",
+    "object": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/AudioCaptureActor.swift.o",
+    "swiftmodule": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/AudioCaptureActor~partial.swiftmodule",
+    "swift-dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/AudioCaptureActor.swiftdeps"
+  },
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/AudioCaptureActorDelegate.swift": {
+    "dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/AudioCaptureActorDelegate.d",
+    "object": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/AudioCaptureActorDelegate.swift.o",
+    "swiftmodule": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/AudioCaptureActorDelegate~partial.swiftmodule",
+    "swift-dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/AudioCaptureActorDelegate.swiftdeps"
+  },
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/ScreenCaptureKitBindings.swift": {
+    "dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/ScreenCaptureKitBindings.d",
+    "object": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/ScreenCaptureKitBindings.swift.o",
+    "swiftmodule": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/ScreenCaptureKitBindings~partial.swiftmodule",
+    "swift-dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/ScreenCaptureKitBindings.swiftdeps"
+  },
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/bridging.swift": {
+    "dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/bridging.d",
+    "object": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/bridging.swift.o",
+    "swiftmodule": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/bridging~partial.swiftmodule",
+    "swift-dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/bridging.swiftdeps"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/master.swiftdeps"
+  },
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.derived/runner.swift": {
+    "dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/runner.d",
+    "object": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/runner.swiftdeps"
+  }
+}

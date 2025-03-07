@@ -1,0 +1,88 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "PackageStructure": ["<PackageStructure>"]
+  "ScreenCaptureKitBindings-arm64-apple-macosx15.0-debug.module": ["<ScreenCaptureKitBindings-arm64-apple-macosx15.0-debug.module>"]
+  "ScreenCaptureKitBindingsPackageTests-arm64-apple-macosx15.0-debug.module": ["<ScreenCaptureKitBindingsPackageTests-arm64-apple-macosx15.0-debug.module>"]
+  "ScreenCaptureKitBindingsTests-arm64-apple-macosx15.0-debug.module": ["<ScreenCaptureKitBindingsTests-arm64-apple-macosx15.0-debug.module>"]
+  "main": ["<ScreenCaptureKitBindings-arm64-apple-macosx15.0-debug.module>"]
+  "test": ["<ScreenCaptureKitBindings-arm64-apple-macosx15.0-debug.module>","<ScreenCaptureKitBindingsTests-arm64-apple-macosx15.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Tests/ScreenCaptureKitBindingsTests/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/AudioCaptureActor.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/AudioCaptureActorDelegate.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/ScreenCaptureKitBindings.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/bridging.swift"]
+    outputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/sources"]
+    description: "Write auxiliary file /Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/sources"
+
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.derived/runner.swift"]
+    outputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/sources"]
+    description: "Write auxiliary file /Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/sources"
+
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Tests/ScreenCaptureKitBindingsTests/AudioCaptureActorTests.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Tests/ScreenCaptureKitBindingsTests/ScreenCaptureKitBindingsTests.swift"]
+    outputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsTests.build/sources"]
+    description: "Write auxiliary file /Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsTests.build/sources"
+
+  "/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Library/Developer/CommandLineTools/usr/bin/swiftc"]
+    outputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+
+  "<ScreenCaptureKitBindings-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindings.swiftmodule"]
+    outputs: ["<ScreenCaptureKitBindings-arm64-apple-macosx15.0-debug.module>"]
+
+  "<ScreenCaptureKitBindingsPackageTests-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindingsPackageTests.swiftmodule"]
+    outputs: ["<ScreenCaptureKitBindingsPackageTests-arm64-apple-macosx15.0-debug.module>"]
+
+  "<ScreenCaptureKitBindingsTests-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindingsTests.swiftmodule"]
+    outputs: ["<ScreenCaptureKitBindingsTests-arm64-apple-macosx15.0-debug.module>"]
+
+  "C.ScreenCaptureKitBindings-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/AudioCaptureActor.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/AudioCaptureActorDelegate.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/ScreenCaptureKitBindings.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/bridging.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/sources"]
+    outputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindings.swiftmodule"]
+    description: "Compiling Swift Module 'ScreenCaptureKitBindings' (4 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","ScreenCaptureKitBindings","-emit-dependencies","-emit-module","-emit-module-path","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindings.swiftmodule","-output-file-map","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/output-file-map.json","-parse-as-library","-incremental","@/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/sources","-I","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx15.0","-enable-batch-mode","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindings.build/ScreenCaptureKitBindings-Swift.h","-swift-version","6","-Xfrontend","-experimental-lazy-typecheck","-Xfrontend","-experimental-skip-all-function-bodies","-Xfrontend","-experimental-allow-module-with-compiler-errors","-Xfrontend","-empty-abi-descriptor","-F","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","screencapturekitbindings"]
+
+  "C.ScreenCaptureKitBindingsPackageTests-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.derived/runner.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindingsTests.swiftmodule","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/sources"]
+    outputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindingsPackageTests.swiftmodule"]
+    description: "Compiling Swift Module 'ScreenCaptureKitBindingsPackageTests' (1 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","ScreenCaptureKitBindingsPackageTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindingsPackageTests.swiftmodule","-output-file-map","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/output-file-map.json","-parse-as-library","-incremental","@/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/sources","-I","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx15.0","-enable-batch-mode","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsPackageTests.build/ScreenCaptureKitBindingsPackageTests-Swift.h","-Xfrontend","-experimental-lazy-typecheck","-Xfrontend","-experimental-skip-all-function-bodies","-Xfrontend","-experimental-allow-module-with-compiler-errors","-Xfrontend","-empty-abi-descriptor","-F","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","screencapturekitbindings"]
+
+  "C.ScreenCaptureKitBindingsTests-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Tests/ScreenCaptureKitBindingsTests/AudioCaptureActorTests.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Tests/ScreenCaptureKitBindingsTests/ScreenCaptureKitBindingsTests.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindings.swiftmodule","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsTests.build/sources"]
+    outputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindingsTests.swiftmodule"]
+    description: "Compiling Swift Module 'ScreenCaptureKitBindingsTests' (2 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","ScreenCaptureKitBindingsTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules/ScreenCaptureKitBindingsTests.swiftmodule","-output-file-map","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsTests.build/output-file-map.json","-parse-as-library","-incremental","@/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ScreenCaptureKitBindingsTests.build/sources","-I","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx15.0","-enable-batch-mode","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/.index-build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-swift-version","6","-Xfrontend","-experimental-lazy-typecheck","-Xfrontend","-experimental-skip-all-function-bodies","-Xfrontend","-experimental-allow-module-with-compiler-errors","-Xfrontend","-empty-abi-descriptor","-F","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","screencapturekitbindings"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Sources/ScreenCaptureKitBindings/","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Tests/ScreenCaptureKitBindingsTests/","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Package.swift","/Users/cajias/Projects/audora/packages/ScreenCaptureKitBindings/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+
