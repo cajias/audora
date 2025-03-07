@@ -14,7 +14,7 @@ export async function startMonitoring(config: AudioMonitorConfig): Promise<Audio
   const monitor = new AudioMonitor(config);
   
   // Add event listeners
-  monitor.addEventListener(handleMonitorEvent);
+  monitor.addEventListener((event) => handleMonitorEvent(event, config));
   
   // Initialize and start
   await monitor.initialize();
@@ -26,7 +26,7 @@ export async function startMonitoring(config: AudioMonitorConfig): Promise<Audio
 /**
  * Handle monitor events
  */
-function handleMonitorEvent(event: MonitorEvent): void {
+function handleMonitorEvent(event: MonitorEvent, config: AudioMonitorConfig): void {
   switch (event.type) {
     case "status_change":
       logStatus(event.status, event.message);
@@ -41,6 +41,13 @@ function handleMonitorEvent(event: MonitorEvent): void {
       break;
     
     case "transcription":
+      const filename = `transcription_${config.applicationName}_${new Date(event.result.startTime)
+        .toISOString()
+        .replace(/:/g, "-")
+        .replace("T", "_")
+        .replace(/\..+/, "")}.txt`;
+      const filepath = `${config.outputDirectory || "./transcriptions"}/${filename}`;
+      console.log(brightGreen(`📝 Transcription saved to: ${bold(filepath)}`));
       logTranscription(event.result.text);
       break;
     
@@ -94,7 +101,6 @@ function logStatus(status: string, message?: string): void {
 function logTranscription(text: string): void {
   if (!text.trim()) return;
   
-  console.log(brightGreen("📝 Transcription:"));
   console.log(`   ${text}`);
 }
 

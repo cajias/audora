@@ -1,7 +1,8 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write --allow-run --allow-env --allow-ffi --unstable-ffi
 
 import { startMonitoring } from "./packages/audio-monitor/mod.ts";
-import { brightRed, cyan, bold } from "@std/fmt/colors";
+import { brightRed, cyan, bold, green } from "@std/fmt/colors";
+import { join } from "@std/path";
 
 // Get application name from command line
 const args = Deno.args;
@@ -13,11 +14,16 @@ if (args.length < 1) {
 }
 
 const applicationName = args[0];
+const outputDirectory = join(Deno.cwd(), "transcriptions");
 
 console.log(cyan(`Starting audio monitor for ${bold(applicationName)}...`));
+console.log(green(`Transcriptions will be saved to: ${bold(outputDirectory)}`));
 
 try {
-  await startMonitoring({ applicationName });
+  await startMonitoring({ 
+    applicationName,
+    outputDirectory
+  });
   
   // Keep process running
   await new Promise(() => {});
