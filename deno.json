@@ -9,5 +9,9 @@
     "@std/fs": "jsr:@std/fs@^1.0.0",
     "@std/async": "jsr:@std/async@^1.0.0",
     "@std/fmt": "jsr:@std/fmt@^0.218.2"
+  },
+  "tasks": {
+    "start": "deno run --allow-read --allow-write --allow-run --allow-env --allow-ffi --unstable-ffi cli.ts",
+    "install": "deno install --allow-read --allow-write --allow-run --allow-env --allow-ffi --unstable-ffi -n audora cli.ts"
   }
 }

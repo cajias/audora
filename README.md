@@ -31,13 +31,27 @@ git clone https://github.com/yourusername/audora.git
 cd audora
 ```
 
+You can also install the CLI globally:
+
+```bash
+deno task install
+```
+
+This will install the `audora` command globally.
+
 ## Usage
 
 ### Command Line
 
 ```bash
-# Start monitoring an application
-deno run --allow-read --allow-write --allow-run --allow-env --allow-ffi --unstable-ffi packages/audio-monitor/src/main.ts "Zoom"
+# Using the task
+deno task start "Zoom"
+
+# Using the CLI directly
+./cli.ts "Zoom"
+
+# If installed globally
+audora "Zoom"
 ```
 
 Replace `"Zoom"` with the name of the application you want to monitor.
